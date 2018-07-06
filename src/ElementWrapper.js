@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { identity, ModsPropType } from './utils';
+import { markForFocus, returnFocus } from './focusManager';
 
 export class ElementWrapper extends React.PureComponent {
   state = { mount: false };
@@ -20,6 +21,7 @@ export class ElementWrapper extends React.PureComponent {
   };
 
   componentDidMount() {
+    markForFocus();
     const { top, left, width, height } = this.node.getBoundingClientRect();
     this.setState({ top, left, width, height, mount: true });
   }
@@ -27,6 +29,10 @@ export class ElementWrapper extends React.PureComponent {
   componentWillUpdate() {
     const { top, left, width, height } = this.node.getBoundingClientRect();
     this.setState({ top, left, width, height });
+  }
+
+  componentWillUnmount() {
+    returnFocus();
   }
 
   setRef = node => {
